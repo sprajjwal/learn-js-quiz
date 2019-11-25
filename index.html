@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="quiz" container="quiz">
+        <!-- Quiz Questions -->
+    </div>
+    <script>
+    
+        const questions = [
+            {
+                q: 'What is Wandeinsamkeit?',
+                a: [
+                    'The feeling of solitude and correctedness from being in the woods.',
+                    'A wide belt worn by cowboys',
+                    'A German Pastry.'
+                ],
+                correct: 0,
+            },
+            {
+                q: 'What color is an apple?',
+                a: [
+                    'Red',
+                    'Green',
+                    'Blue'
+                ],
+                correct: 0,
+            },
+            {
+                q: "What is Mitchell's last name?",
+                a: [
+                    'Hudson',
+                    'Danvers',
+                    'Brown'
+                ],
+                correct: 0,
+            },
+            {
+                q: "What is wabi-sabi?",
+                a: [
+                    'A hot spicy green condiment.',
+                    'A long scarf made from alpaca fur.',
+                    'Finding beauty in imperfection.'
+                ], correct: 0
+            }
+        ]
+    
+        
+        function init() {
+            const quizEl = document.getElementById('quiz')
+            let quizStr = ""
+            questions.forEach(function(question, qIndex) {
+                console.log(question.q)
+                let answerStr = ""
+                const answerOrder = randomRange(question.a.length)
+                question.a.forEach(function(answer, aIndex) {
+                    answerStr += `
+                        <li style="order: ${answerOrder[aIndex]}">
+                            <label>
+                                <input 
+                                type="radio" 
+                                name="question-${qIndex}"
+                                data-correct="${question.correct === aIndex}"">
+                                ${answer}
+                            </label>
+                        </li>
+                    `
+                })
+                quizStr += `
+                <form>
+                    <h1>${question.q}</h1>
+                    <div class="alert" style="display:none;">-</div>
+                    <ul style="display:flex; flex-direction:column;">
+                    ${answerStr}
+                    </ul>
+                    <button type="submit">Submit</button>
+                </form>
+                `
+            })
+            quizEl.innerHTML += quizStr
+            quizEl.addEventListener("submit", function(e) {
+                e.preventDefault()
+                const alert = e.target.querySelector('div.alert')
+                const selectedInput = e.target.querySelector('input[type=radio]:checked')
+                if (selectedInput === null) {
+                    alert.style.display = "block"
+                    alert.innerHTML = 'Please select an answer'
+                } else if (selectedInput.dataset.correct === 'true') {
+                    alert.style.display = "block"
+                    alert.style.color = "green"
+                    alert.innerHTML = "That's correct"
+                } else {
+                    alert.style.display = "block"
+                    alert.style.color = "red"
+                    alert.innerHTML = "Oops! try again"
+                }
+            })
+        }
+        init()
+            
+        function random(n) {
+            const r = Math.random() * n
+            return Math.floor(r)
+        } 
+        function randomRange(x) {
+            const arr = []
+            for( let i = 0; i < x; i++) {
+                arr.push(i)
+            }
+
+            const randomArr = []
+            while (arr.length > 0) {
+                const randomIndex = random(arr.length)
+                randomArr.push(arr[randomIndex])
+                arr.splice(randomIndex, 1)
+            }
+
+            return randomArr
+        }
+        console.log(randomRange(4))
+        
+    
+    </script>
+    
+</body>
+</html>
